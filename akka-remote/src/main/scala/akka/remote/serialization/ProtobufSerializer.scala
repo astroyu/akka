@@ -8,8 +8,8 @@ import akka.serialization.{ Serializer, Serialization }
 import com.google.protobuf.Message
 import akka.actor.DynamicAccess
 import akka.remote.RemoteProtocol.ActorRefProtocol
-import akka.actor.ActorSystem
 import akka.actor.ActorRef
+import akka.actor.ExtendedActorSystem
 
 object ProtobufSerializer {
 
@@ -30,8 +30,8 @@ object ProtobufSerializer {
    * from Akka's protobuf representation in the supplied
    * [[akka.actor.ActorSystem]].
    */
-  def deserializeActorRef(system: ActorSystem, refProtocol: ActorRefProtocol): ActorRef =
-    system.actorFor(refProtocol.getPath)
+  def deserializeActorRef(system: ExtendedActorSystem, refProtocol: ActorRefProtocol): ActorRef =
+    system.provider.resolveActorRef(refProtocol.getPath)
 }
 
 /**

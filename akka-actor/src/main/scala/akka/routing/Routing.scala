@@ -75,10 +75,12 @@ private[akka] class RoutedActorCell(_system: ActorSystemImpl, _ref: InternalActo
    */
 
   def applyRoute(sender: ActorRef, message: Any): immutable.Iterable[Destination] = message match {
-    case _: AutoReceivedMessage                ⇒ Destination(sender, self) :: Nil
-    case CurrentRoutees                        ⇒ { sender ! RouterRoutees(_routees); Nil }
-    case msg if route.isDefinedAt(sender, msg) ⇒ route(sender, message)
-    case _                                     ⇒ Nil
+    case _: AutoReceivedMessage ⇒ Destination(sender, self) :: Nil
+    case CurrentRoutees         ⇒ { sender ! RouterRoutees(_routees); Nil }
+    case msg ⇒
+      val x = (sender, msg)
+      if (route.isDefinedAt(x)) route(x)
+      else Nil
   }
 
   /**
@@ -256,6 +258,9 @@ class RouteeProvider(val context: ActorContext, val routeeProps: Props, val resi
    * `Resizer.resize`.
    */
   def unregisterRoutees(routees: java.lang.Iterable[ActorRef]): Unit = unregisterRoutees(immutableSeq(routees))
+
+  // TODO replace all usages of actorFor in routing with actorSelection. Not possible until
+  //      major refactoring of routing because of demand for synchronous registration of routees.
 
   /**
    * Looks up routes with specified paths and registers them.
