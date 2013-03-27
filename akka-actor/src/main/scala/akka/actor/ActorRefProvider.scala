@@ -323,7 +323,6 @@ trait ActorRefFactory {
     case ActorPathExtractor(address, elems) ⇒
       ActorSelection(provider.rootGuardianAt(address), elems)
     case _ ⇒
-      println(s"## selection of unknown path [${path}] failed")
       ActorSelection(provider.deadLetters, "")
   }
 
