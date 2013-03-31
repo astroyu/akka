@@ -347,7 +347,7 @@ private[akka] class RemoteActorRef private[akka] (
     }
   }
 
-  def isTerminated: Boolean = false
+  @deprecated("Use DeathWatch", "2.2") override def isTerminated: Boolean = false
 
   private def handleException: Catcher[Unit] = {
     case e: InterruptedException ⇒

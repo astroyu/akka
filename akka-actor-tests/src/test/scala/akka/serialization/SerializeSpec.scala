@@ -411,7 +411,7 @@ case class FakeThrowable(msg: String) extends Throwable(msg) with Serializable {
 case class FakeActorRef(name: String) extends InternalActorRef with ActorRefScope {
   override def path = RootActorPath(Address("proto", "SomeSystem"), name)
   override def forward(message: Any)(implicit context: ActorContext) = ???
-  override def isTerminated = ???
+  @deprecated("Use DeathWatch", "2.2") override def isTerminated = ???
   override def start() = ???
   override def resume(causedByFailure: Throwable) = ???
   override def suspend() = ???
